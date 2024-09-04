@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<head>
+    <title>{{ product.title }}</title>
+    <style>
+        .color-sizes {
+            display: none;
+        }
+    </style>
+</head>
+<body style="margin-top: 85px;">
+    <img src="{{ product.image }}" alt="{{ product.title }}" style="height: 500px; float: left; margin-right: 15px;">
+    <h1>{{ product.title }}</h1>
+    <h2>$ {{ product.price }} </h2>
+    <p>{{ product.description }}</p>
+    {% if user.is_authenticated %}
+                        
+    {% else %}
+    <a class='bx bx-shopping-bag add-cart' href="{% url 'login' %}">加入購物車</a>
+    {% endif %}
+    <a href="{{ product.url }}">去GRL官網查看此商品</a>
+    
+
+<h3 id="sizeandcolor">Available Colors:</h3>
+{% for color in colors %}
+    <div style="float: left; margin: 15px;">
+        <h4>{{ color.value }}</h4>
+        
+        <!-- color_images から対応する画像を直接呼び出して表示 -->
+        {% for color_image in color_images %}
+        {% if color_image.color.value == color.value|cut:"Color: " %}
+        <img src="{{ color_image.image_url }}" alt="{{ color.value }}" style="height: 100px;">
+        {% endif %}
+
+    
+        
+        {% endfor %}
+        <div style="clear: both;"></div>
+        <button type="button" onclick="toggleSizes('{{ color.value }}')">Select Sizes</button>
+        
+        <div id="sizes_{{ color.value }}" class="color-sizes">
+            <h5>Select Size:</h5>
+            <ul>
+                {% if color.value in color_size_map %}
+                    {% with sizes=color_size_map|get_item:color.value %}
+                        {% for size_id, size_value in sizes.items %}
+                            <li>
+                                <form method="post" 
+                                {% if user.is_authenticated %}
+                                action="{% url 'add_to_cart' product.id %}">
+                                {% else %}
+                                action="{% url 'login'  %}">
+                                {% endif %}
+                                    {% csrf_token %}
+                                    <input type="hidden" name="color" value="{{ color.value|cut:'Color: ' }}">
+                                    <input type="hidden" name="size" value="{{ size_value }}">
+                                    <button type="submit">Add {{ size_value }} to Cart</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    {% endwith %}
+                {% else %}
+                    <li>No sizes available for this color</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% endfor %}
+<div style="clear: both;"></div>
+
+
+    <script>
+        function toggleSizes(colorId) {
+            var sizesDiv = document.getElementById('sizes_' + colorId);
+            if (sizesDiv.style.display === "none") {
+                sizesDiv.style.display = "block";
+            } else {
+                sizesDiv.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+{% endblock %}
+
+
+

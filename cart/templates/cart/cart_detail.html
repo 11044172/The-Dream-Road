@@ -1,0 +1,85 @@
+{% extends 'cart_base.html' %}
+
+{% block content %}
+{% load cart_extras %}
+<body>
+    <h1 style="margin-top: 100px;">購物車</h1>
+    <section style="min-height: 70vh; float: left; width: 60%;">
+        <div class="cart-content">
+            <ul>
+                {% if cart_items_with_images %}
+                {% for cart_item in cart_items_with_images %}
+                <div style="margin: 2px;margin-left: 10%;">
+                    {% if cart_item.color_image %}
+                    <img src="{{ cart_item.color_image.image_url }}" border="1" style="border-color:darkgrey; height: 140px;float: left;margin: 5px;">
+                    {% else %}
+                    <img src="{{ cart_item.item.product.image }}" border="1" style="border-color:darkgrey; height: 140px;float: left;margin: 5px;">
+                    {% endif %}
+                    <p style="font-size: 18px;">{{ cart_item.item.product.title }}   x {{ cart_item.item.quantity }}</p>
+                    <p>color: {{ cart_item.item.color }}</p>
+                    <p>size: {{ cart_item.item.size }}</p>
+                    <p>$ {{ cart_item.item.product.price }}</p>
+                    <form action="{% url 'remove_from_cart' cart_item.item.id %}" method="post">
+                        {% csrf_token %}
+                        <button class='bx bxs-trash-alt' type="submit"></button>
+                    </form>
+                    <div style="clear: both;"></div>
+                </div>
+                <hr style="margin-left: 10%;width: 90%;">
+                {% endfor %}
+                <h3 style="margin-left: 10%;margin-bottom: 0;">共{{ total_item_count }}件商品</h3>
+                <h3 style="margin-left: 10%;margin-top: 0;">小計: ${{ total_price }}</h3>
+                {% else %}
+                <li>カートは空です。</li>
+                {% endif %}
+            </ul>
+        </div>
+        
+        <a href="{% url 'shop:index' %}">回去繼續逛</a>
+
+    </section>
+    {% if cart_items_with_images %}
+
+    <section style="margin-left: 70%; margin-top: 10vh;">
+        <table style="border-collapse: collapse;">
+            <tr style="height: 30px;">
+                <td>商品總金額:</td>
+                <td></td>
+                <td>${{ total_price }}</td>
+            </tr>
+            <tr style="height: 30px;">
+                <td style="text-align: right;">運費</td>
+                <td></td>
+            </tr>
+            <tr style="height: 20px;">
+                <td></td>
+                <td>國際運費: $100</td>
+            </tr>
+            <tr style="height: 20px;">
+                <td></td>
+                <td>國內運費: $50</td>
+            </tr>
+            <tr style="height: 20px;">
+                <td></td>
+                <td>額外運費: ${{ extra_shipping_fee }}</td>
+            </tr>
+            <tr style="height: 30px;">
+                <td>運費總金額:</td>
+                <td></td>
+                <td>${{ total_shipping_fee }}</td>
+            </tr>
+            <tr style="height: 30px; border-top: 1px solid #000;">
+                <td><h3>訂單總金額:</h3></td>
+                <td></td>
+                <td><h3>${{ order_total_price }}</h3></td>
+            </tr>
+        </table>
+    </section>
+    
+    
+    {% else %}
+    {% endif %}
+    <div style="clear: both;"></div>
+
+</body>
+{% endblock %}

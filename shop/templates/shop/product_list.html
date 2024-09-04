@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>商品一覧</title>
+</head>
+<body>
+    <h1>商品一覧</h1>
+    <ul>
+        {% for product in products %}
+        <li >
+            <a href="{% url 'shop:product_detail' product.id %}">
+                <img style="height: 400px;width: 300px;" src="{{ product.image }}" alt="{{ product.title }}">
+                <h2>{{ product.title }}</h2>
+                <p>{{ product.price }}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

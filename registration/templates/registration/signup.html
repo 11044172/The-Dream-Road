@@ -1,0 +1,13 @@
+{% extends "registration_base.html" %}
+{% block main %}
+<section style="margin-top: 50px;" >
+    <header>註冊帳號</header>
+    {% include "_form.html" with submit_label="登録" %}
+
+    <div class="top">
+        <span style="color: gray;">已擁有帳號? <a style="color: gray;" href="{% url 'login' %}" onclick="login()">登入</a></span>
+    </div>
+</section>
+
+
+{% endblock %}

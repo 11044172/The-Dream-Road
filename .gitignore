@@ -1,0 +1,21 @@
+# Python関連ファイル
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.env
+*.venv
+venv/
+ENV/
+env/
+ 
+# Django関連
+db.sqlite3
+/static/
+media/
+
+# OSやIDE関連
+.DS_Store
+.idea/
+.vscode/

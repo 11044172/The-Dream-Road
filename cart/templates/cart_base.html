@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>The Dream Road</title>   
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'> 
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+          <div class="header__inner">
+            <nav class="header__nav nav" id="js-nav">
+                <ul class="nav__items nav-items">
+                  <li class="nav-items__item"><a href="{% url 'index' %}"><i class='bx bx-home'></i>  home</a></li>
+                  <li class="nav-items__item"><a href="contact.html"><i class='bx bx-envelope'></i>  contact us</menu></a></li>
+                  {% if user.is_authenticated %}
+                  <li class="nav-items__item"><a href="{% url 'account' %}"><i class='bx bx-user'></i>  account</a></li>
+              {% else %}
+              <li class="nav-items__item"><a href="{% url 'login' %}"><i class='bx bx-user'></i>  account</a></li>
+              {% endif %}
+                  <li class="nav-items__item"><a href="faq.html"><i class='bx bx-question-mark'></i>  FAQ</a></li>
+                  <li class="nav-items__item"><a href="aboutus.html"><i class='bx bx-group'></i>  About us</a></li>
+                </ul>
+              </nav>
+      
+              <button class="header__hamburger hamburger" id="js-hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+              </button>
+            
+              <a class="title" href="{% url 'index' %}">
+                The Dream Road
+              </a>
+            <div style="display: flex;">
+              {% if user.is_authenticated %}
+              <a  style="margin-top: 2px;margin-right: 15px;"class="icon" href="{% url 'account' %}">
+                <i  class='bx bx-user icon' ></i>
+              </a>
+              {% else %}
+              <a  style="margin-top: 2px;margin-right: 15px;"class="icon" href="{% url 'login' %}">
+                <i  class='bx bx-user icon' ></i>
+              </a>
+              {% endif %}
+            
+              <i style="margin-right: 20px;" class='bx bx-shopping-bag icon' id="cart-icon"></i>
+            </div>
+            
+          </div>
+          
+            
+           
+          <div class="nav container">
+            <div class="cart"style="overflow-y: auto;max-height:95vh; min-height:95vh">
+                <h2 class="cart-title">Your Cart</h2>
+                
+                <div class="cart-content">
+                  <ul>
+                    {% if cart_items %}
+                    {% for item in cart_items %}
+                    <div style="margin: 2px;">
+                      <img border="1" src="{{ item.product.image }}" style="border-color: darkgray; height: 90px;float: left;margin: 5px;">
+                      <p>{{ item.product.title }} ({{ item.color }}, {{ item.size }}) x {{ item.quantity }}</p>
+                      <p>$ {{ item.product.price }}</p>
+                      <form action="{% url 'remove_from_cart' item.id %}" method="post">
+                        {% csrf_token %}
+                        <button class='bx bxs-trash-alt'type="submit"></button>
+                      </form>
+                      <div style="clear: both;"></div>
+                      
+                      <a  url="{% url 'remove_from_cart' item.id %}"></a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <li>カートは空です。</li>
+                {% endif %}
+                  </ul>
+                  
+                </div>
+                
+                <div class="total">
+                    <div class="total-title">Total</div>
+                    <div class="total-price">${{ total_price }}</div>
+                </div>
+                <hr>
+              <div style="display: flex;
+              justify-content: center;
+              align-items: center;">
+                <a class='bx bx-shopping-bag add-cart' style="font-size: 16px;"  href="{% url 'cart_detail' %}">查看購物車</a>
+              </div>
+                <i class='bx bx-x' id="close-cart"></i>
+                
+
+            </div>
+        </div>
+        </div>
+        </header>
+        {% block content %}
+       
+        {% endblock %}
+
+        <footer class="footer">
+          <div >
+            <h1 style="font-size: 18px;">about the shop</h1>
+            
+            <p>No.200 zhongbei Road</p>
+            <p>zhongli taoyuan City</p>
+            <p>Taiwan</p>
+          </div>
+          <div> 
+            <h1 style="font-size: 18px;">Menu</h1>
+            <a class="footer_btn" href="index.html">home</a><br>
+            <a class="footer_btn" href="contact.html">contact us</a><br>
+            <a class="footer_btn" href="login.html">account</a><br>
+            <a class="footer_btn" href="faq.html">FAQ</a><br>
+            <a class="footer_btn" href="privacy_policy.html">privacy policy</a>
+            
+          </div>
+        </footer>
+      </div>
+      <script src="{% static 'js/main.js' %}"></script>
+      <script src="{% static 'js/cart.js' %}"></script>
+</body>
+</html>

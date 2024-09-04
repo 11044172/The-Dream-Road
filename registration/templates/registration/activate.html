@@ -1,0 +1,10 @@
+{% extends "registration_base.html" %}
+{% block main %}
+<header style="color: white;">電子信箱認証</header>
+{% if result %}
+<p>驗證成功！</p>
+<p><a href="{% url 'login'%}">登入帳號</a></p>
+{% else %}
+<p>無効なリンクです</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block content %}
+<h1 style="margin-top: 100px;">追加商品内容確認と編集</h1>
+
+<form method="post" action="{% url 'save_product' product.id %}">
+    {% csrf_token %}
+    <table style=" width: 100%; border: 1px solid black;border-collapse: collapse;" >
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+        </style>
+        <tr>
+            <td><label for="title">商品タイトル:</label></td>
+            <td><input style="width: 400px;" type="text" id="title" name="title" value="{{ product.title }}"></td>
+        </tr>
+        <tr>
+            <td><label for="category">カテゴリ:</label></td>
+            <td><select id="category" name="category" >
+                {% for category in categories %}
+                <option value="{{ category.id }}" 
+                    {% if category.id == product.category.id %}selected{% endif %}>
+                    {{ category.title }}
+                </option>
+                {% endfor %}
+            </select></td>
+        </tr>
+        <tr>
+                <td><label for="shipping_size">発送サイズ:</label></td>
+            <td><select name="shipping_size" id="shipping_size">
+                <option value="normal">ノーマル</option>
+                <option value="large">大</option>
+                <option value="extra_large">特大</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td><label for="description">商品説明:</label></td>
+            <td><textarea style="width: 300px; height: 100px;" id="description" name="description">{{ product.description }}</textarea></td>
+        </tr>
+        <tr>
+            <td><label for="image">商品画像:</label></td>
+            <td>
+                <img src="{{ product.image }}" alt="{{ product.title }}" style="height: 200px;">
+                <input style="width: 300px;" type="text" id="image" name="image" value="{{ product.image }}" >
+            </td>
+        </tr>
+        <tr>
+            <td><label for="price">販売金額</label></td>
+            <td><input type="text" id="price" name="price" value="{{product.price}}"></td>
+        </tr>
+    </table>
+
+    <h2>Colors</h2>
+    <table style="border-collapse: collapse; width: 100%;">
+
+        <!-- カラーの行 -->
+        <tr>
+            <td><label>Colors:</label></td>
+            {% for color in colors %}
+            <td>
+                <input type="text" name="colors" 
+                {% if color.value|cut:"Color: " == "ブラック" %} 
+                    value="黑色"
+                {% elif color.value|cut:"Color: " == "ベージュ" %} 
+                    value="淺褐色"
+                {% elif color.value|cut:"Color: " == "カーキ" %} 
+                    value="卡其色"
+                {% elif color.value|cut:"Color: " == "アイボリー" %} 
+                    value="象牙色"
+                {% elif color.value|cut:"Color: " == "グレー" %} 
+                    value="灰色"
+                {% elif color.value|cut:"Color: " == "ピンク" %} 
+                    value="粉紅色"
+                {% elif color.value|cut:"Color: " == "ネイビー" %} 
+                    value="海軍藍"
+                {% elif color.value|cut:"Color: " == "オフベージュ" %} 
+                    value="浅米色"        
+                {% elif color.value|cut:"Color: " == "レッド" %} 
+                    value="紅色"  
+                {% elif color.value|cut:"Color: " == "ブルー" %} 
+                    value="藍色"  
+                {% elif color.value|cut:"Color: " == "イエロー" %} 
+                    value="黃色" 
+                {% elif color.value|cut:"Color: " == "ブラウン" %} 
+                    value="咖啡色" 
+                {% elif color.value|cut:"Color: " == "ボルドー" %} 
+                    value="酒紅色"  
+                {% elif color.value|cut:"Color: " == "ミントグリーン" %} 
+                    value="薄荷綠" 
+                {% elif color.value|cut:"Color: " == "キャメル" %} 
+                    value="駝色"
+                {% elif color.value|cut:"Color: " == "ブルーグレー" %} 
+                    value="藍灰色"
+                {% elif color.value|cut:"Color: " == "チャコール" %} 
+                    value="炭灰色"
+                {% elif color.value|cut:"Color: " == "オフホワイト" %} 
+                    value="米白色"
+                {% elif color.value|cut:"Color: " == "コーラルピンク" %} 
+                    value="珊瑚粉色"
+                {% elif color.value|cut:"Color: " == "ピスタチオ" %} 
+                    value="開心果綠"
+                {% elif color.value|cut:"Color: " == "ターコイズブルー" %} 
+                    value="綠松石色"
+                {% elif color.value|cut:"Color: " == "モカ" %} 
+                    value="摩卡色"
+                {% elif color.value|cut:"Color: " == "グレージュ" %} 
+                    value="灰褐色"
+                {% elif color.value|cut:"Color: " == "ライトピンク" %} 
+                    value="淺粉色"
+                {% elif color.value|cut:"Color: " == "ライトベージュ" %} 
+                    value="灰米色"
+                {% elif color.value|cut:"Color: " == "オレンジ" %} 
+                    value="橘色"
+
+
+                {% else %} 
+                
+                    value="{{ color.value }}" 
+                {% endif %}
+                style="margin-right: 10px;">
+            </td>
+            
+            
+            {% endfor %}
+        </tr>
+
+        <!-- カラーの画像の行 -->
+        <tr>
+            <td><label>Color Images:</label></td>
+            {% for color in colors %}
+            <td>
+            
+                    {% for color_image in color_images %}
+                    {% if color_image.color.value == color.value|cut:"Color: " %}
+                    <img src="{{ color_image.image_url }}" alt="{{ color.value }}" style="height: 100px; margin-right: 10px;">
+                    {% endif %}
+                    {% endfor %}
+                
+            </td>
+            {% endfor %}
+        </tr>
+
+        <!-- サイズの行 -->
+        <tr>
+            <td><label for="sizes">Sizes:</label></td>
+            {% for color in colors %}
+            <td>
+                
+                    {% if color.value in color_size_map %}
+                        {% with sizes=color_size_map|get_item:color.value %}
+                            {% for size_id, size_value in sizes.items %}
+                                <input type="text" name="sizes" value="{{ size_value }}"  style="margin-right: 10px;width: 40px;">
+                            {% endfor %}
+                        {% endwith %}
+                    {% else %}
+                        <span>No sizes available for {{ color.value }}</span>
+                    {% endif %}
+                
+            </td>
+            {% endfor %}
+        </tr>
+
+    </table>
+
+
+    <button type="submit">保存</button>
+</form>
+
+
+{% endblock %}

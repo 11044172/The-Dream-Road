@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main>
+    <section class="top-warapper">
+        <div class="rotation-container">
+          <div>
+              <ul class="rotation_ul">
+                  <li class="rotation-item rotation-item1"></li>
+                  <li class="rotation-item rotation-item2"></li>
+                  <li class="rotation-item rotation-item3"></li>
+                  <li class="rotation-item rotation-item4"></li>
+                  <li class="rotation-item rotation-item5"></li>
+              </ul>
+          </div>
+        
+          <div class="focus-container">
+              <ul class="focus_ul">
+                  <li><div class="focus-item focus-item1"></div></li>
+                  <li><div class="focus-item focus-item2"></div></li>
+                  <li><div class="focus-item focus-item3"></div></li>
+                  <li><div class="focus-item focus-item4"></div></li>
+                  <li><div class="focus-item focus-item5"></div></li>
+              </ul>
+          </div>
+      </div>
+      </section>
+
+    <div class="Classification_tables">
+        <p>商品</p>
+        {% for category in categories %}
+        <a class="skip" href="{% url 'shop:category_products' category.id %}">{{ category.name }}</a>
+        <br>
+        {% endfor %}
+    </div>
+
+    <div class="tin product_ranking" >
+        <h1 style="margin-left:55px;margin-bottom: 0;">Ranking</h1>
+        <hr width="90%" size="2px;" color="black" noshade="" style="margin-left:50px; margin-bottom: 0;">
+        <ol style="display: flex; flex-wrap: wrap; flex-direction: row">
+            {% load add %}
+            {% for product in products %}
+            <li>
+                <p style="margin-left: 20px;margin-bottom: 0; font-size: 20px;">&#931{{ forloop.counter|add:1 }}</p>
+                <div class="classic classic{{ forloop.counter }}">
+                    <div class="effect">
+                        <img class="product-img" src="{{ product.image }}" style="height: 350px;width: 260px;">
+                        <a href="{% url 'shop:product_detail' product.id %}">
+                            <div class="mask">
+                                <div class="caption">watch more...</div>
+                            </div>
+                        </a>
+                        <p class="product_name product-title" style="width: 260px; font-size: 19px; color: rgb(66, 65, 65);margin-top: 7px;">{{ product.title }}</p>
+                        <span class="price">${{ product.price }}</span>
+                        {% if user.is_authenticated %}
+                        <a class='bx bx-shopping-bag add-cart' href="{% url 'shop:product_detail' product.id %}#sizeandcolor">加入購物車</a>
+                        {% else %}
+                        <a class='bx bx-shopping-bag add-cart' href="{% url 'login' %}">加入購物車</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    {% for category in categories %}
+    <h1 id="{{ category.id }}" style="margin-left:50px;margin-bottom: 0;">{{ category.name }}</h1>
+    <hr width="90%" size="2px;" color="black" noshade="" style="margin-left:50px; margin-bottom: 0;">
+    <div class="tin" style="margin-left: 40px;">
+        {% for product in products %}
+        {% if product.category == category.name %}
+        <div class="classic" style="height:500px;">
+            <div class="effect">
+                <img class="product-img" src="{{ product.image }}" alt="{{ product.title }}" style="height: 350px;width: 260px;">
+                <a href="{% url 'shop:product_detail' product.id %}">
+                    <div class="mask">
+                        <div class="caption">watch more...</div>
+                    </div>
+                </a>
+                <p class="product_name product-title" style="font-size: 19px; color: rgb(66, 65, 65);margin-top: 7px;">{{ product.title }}</p>
+                <span class="price">${{ product.price }}</span>
+                {% if user.is_authenticated %}
+                        <a class='bx bx-shopping-bag add-cart' href="{% url 'shop:product_detail' product.id %}#sizeandcolor">加入購物車</a>
+                        
+                        {% else %}
+                        <a class='bx bx-shopping-bag add-cart' href="{% url 'login' %}">加入購物車</a>
+                        {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+    
+</main>
+{% endblock %}

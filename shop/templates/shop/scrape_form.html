@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 style="margin-top: 100px;">商品情報の取得</h1>
+    <form method="post" action="{% url 'scrape_product' %}">
+        {% csrf_token %}
+        <label for="url">商品ページのURL:</label>
+        <input type="text" id="url" name="url" required><br><br>
+        <label for="category">カテゴリー:</label>
+        <select id="category" name="category">
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.title }}</option>
+            {% endfor %}
+        </select><br><br>
+        <button type="submit">取得開始</button>
+    </form>
+   
+{% endblock %}
