@@ -10,3 +10,6 @@ This is a Django-based web application for an online shop.
 1. Clone the repository
 2. Install the requirements using `pip install -r requirements.txt`
 3. Run the Django server
+
+
+###setting.py for developing
